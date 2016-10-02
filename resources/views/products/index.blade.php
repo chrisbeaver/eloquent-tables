@@ -30,6 +30,7 @@
                             });
             let rows;
             let paginator;
+            let total_count;
             
             function buildTable(payload)
             {
@@ -50,8 +51,14 @@
                     cell4.innerHTML = data.price;
                 });
                 console.log(paginator);
-                paginator.innerHTML = payload.count;
+                total_count = payload.count;
+                buildPaginator(); 
+            }
 
+            function buildPaginator()
+            {
+                console.log("Count: " + total_count);
+                paginator.innerHTML = total_count;
             }
 
             function reqListener()
@@ -62,22 +69,21 @@
 
             function initializeTable()
             {
-                let newItem = document.createElement("div");       // Create a <li> node
-                // var textnode = document.createTextNode("Water");  // Create a text node
-                // newItem.appendChild(textnode);                    // Append the text to <li>
-
+                let wrapper = document.createElement("div");
+                wrapper.className = "table-wrapper";
                 let table = tables[0]; 
-                document.body.insertBefore(newItem, table);
-                newItem.appendChild(table);
+                
+                document.body.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
 
                 paginator = document.createElement("div");
                 paginator.className = "paginator";
-                newItem.appendChild(paginator);
+                wrapper.appendChild(paginator);
             }
 
             function getData()
             {
-                let  r = new XMLHttpRequest();
+                let r = new XMLHttpRequest();
                 
                 r.open("POST", tables[0].getAttribute("data-target"), true);
                 r.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}");
@@ -93,6 +99,7 @@
             }
             initializeTable();
             getData();
+            
             
         })();
     </script>
